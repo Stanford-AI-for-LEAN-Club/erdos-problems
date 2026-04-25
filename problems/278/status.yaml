@@ -1,27 +1,79 @@
 problem: 278
 title: Maximum density of congruence covers
+
 status: active
-solution_status: paper-worthy partial progress; not a full solution
-latest_frontier_version: v9
+solution_status: paper-worthy partial progress; corrected v10; not a full solution
+not_a_full_solution: true
+
+latest_frontier_version: v10_corrected
 latest_frontier: frontier/current/frontier_note.md
 latest_frontier_yaml: frontier/current/frontier_visualizer.yaml
+
 latest_paper_tex: paper/current/erdos278_paper.tex
 latest_paper_pdf: paper/current/erdos278_paper.pdf
+latest_paper_md: paper/current/erdos278_paper.md
+
+correction_notice: corrections/v10_correction_notice.md
 latest_formalization_root: formalization/lean
-current_center_of_gravity: common-core squarefree graph links
-operational_goal: exact packability and weighted optimization on structured squarefree families
-mathematical_frontier: star-triangle structure plus separator/interface exact solvability
+
+current_center_of_gravity: >
+  squarefree common-core graph links; exact packability; packable-subgraph
+  optimization; layer-union frontier for true maximum coverage
+
+operational_goal: >
+  develop exact structural theory for squarefree congruence packing, keep
+  packable-subgraph optimization separate from full union-measure optimization,
+  and identify regimes where exact #278 maximum coverage can actually be proved
+
+stable_abstractions:
+  - squarefree product-space cylinder model
+  - singleton residual-box reduction
+  - perfect packing
+  - intersection-separating coloring
+  - common-core theorem
+  - graph-link invariant chi_d(G)
+  - star-triangle normal form for packable-color cost
+
+stable_packability_results:
+  - pair-support theorem
+  - common-core graph-link theorem
+  - star packability formula
+  - complete-bipartite packability formula, with Lean currently covering the small-side regime
+  - uniform clique-link theorem as a project-level result, not yet Lean-formalized
+  - corrected arithmetic clique-link threshold, pending fully stabilized corrected proof writeup
+
+major_corrections_v10:
+  - packable-subgraph optimization is not the same as full #278 maximum coverage
+  - weighted graph-link results should not be advertised as exact full #278 maxima without separate union-measure upper bounds
+  - old nonuniform clique-link criterion using c_i - 2 was incorrect
+  - corrected triangle-plus-stars clique-link criterion uses b_i - 3 after choosing three triangle vertices
+  - arbitrary-weight clique threshold theorem was demoted/deleted
+  - true full-coverage frontier is the one-layer union objective U_d(H)
+
+mathematical_frontier: >
+  layer-union optimization U_d(H), especially the full-capacity proper-label
+  conjecture and the matching-polynomial expression for one-layer graph links
+
 formalization_status: >
-  finite core theory formalized; graph-link layer formalized; star criteria formalized;
-  substantial complete-bipartite packability library formalized, including the exact small-side theorem
+  finite core theory formalized; graph-link layer formalized; star criteria
+  formalized; substantial complete-bipartite packability library formalized,
+  including the exact small-side theorem. The formalization matches the stable
+  packing spine and does not formalize the demoted weighted maximum claims.
+
 next_formalization_targets:
-  - remaining complete-bipartite regime a >= d
-  - clique-link packability theorems
-  - weighted clique theorems
-  - triangle-free and one-full-side weighted theorems
+  - remaining complete-bipartite packability regime a >= d
+  - star-triangle normal form for chi_d(F) as a packable-color invariant
+  - one-layer K4 example separating packable-subgraph value from full union value
+  - corrected clique-link criteria after the proof is fully stabilized
+  - layer-union definitions U_d(H) once the mathematical target is precise
+
 next_math_targets:
-  - weighted complete bipartite links with bounded capacities on both sides
-  - broader separator-driven exact algorithms beyond fixed treewidth
+  - develop U_d(H), the one-layer graph-link union objective
+  - prove or refute optimality of proper local labeling in the full-capacity regime
+  - write the corrected nonuniform clique-link proof
+  - clarify which packable-subgraph results yield true #278 maximum theorems under additional hypotheses
+  - keep #273 as a secondary scouting branch, separate from the #278 paper track
+
 public_problem_links:
   - https://www.erdosproblems.com/278
   - https://www.erdosproblems.com/202

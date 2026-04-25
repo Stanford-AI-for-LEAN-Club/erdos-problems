@@ -1,430 +1,252 @@
-# Erdős Problem #278 and companions — latest frontier note (v9)
+# Erdős Problem #278 and companions — corrected frontier note v10
 
-**Date:** April 18, 2026  
-**Status:** Still not a full solution to #278. The project remains clearly paper-worthy, and the main change since v8 is a shift from explicit formulas on a few dense families to a more general **star–triangle / separator-interface exact-solvability framework** for weighted common-core graph links.
+**Date:** April 25, 2026  
+**Status:** Paper-worthy, but the paper must be reframed. The stable core is **squarefree congruence packing via common-core graph links**. Several weighted results from v8/v9 are still useful as **packable-subgraph optimization**, but they should not be advertised as full #278 maximum-density theorems without additional layer-union upper bounds.
 
 ---
 
-## 0. Purpose of this note
+## 0. Why v10 exists
 
-This note updates the previous v8 frontier note. It is meant to be usable by a fresh, skeptical reader starting from the public problem pages for Erdős #278, #202, and #1190.
+The v9 frontier note promoted a star-triangle / separator-interface framework for weighted common-core graph links. That framework is still valuable, but a new critical pass found two serious issues:
 
-It records:
+1. **Packable-subgraph optimization was being conflated with full #278 maximum coverage.** In #278, overlapping non-packable cylinders may still add union measure. Thus the weighted graph-link objective must be distinguished from the true union-measure objective.
+2. **The nonuniform clique-link \(n-2\) criterion was wrong as stated.** It used a two-vertex deletion and \(c_i-2\). The actual one-triangle-plus-stars construction uses three triangle vertices and star centers with base load \(3\), hence \(b_i-3\).
 
-1. the public problem context;
-2. the squarefree / common-core graph-link framework;
-3. the exact theorems consolidated through v8;
-4. the new post-v8 conceptual consolidation;
-5. the new exact algorithmic families that now look genuinely solid;
-6. the parameterized extensions that look promising but are **not yet fully consolidated**;
-7. the current best next targets.
-
-**Gap from v8.** This is still **more material for the current paper**, not a different paper. The center of gravity has not changed, but the paper now wants a stronger algorithmic section: exact solvability via local star–triangle structure and separator signatures.
+This correction is significant but not catastrophic. The project remains paper-worthy because the squarefree packing theory, common-core graph-link framework, and star-triangle normal form are still coherent and reusable.
 
 ---
 
 ## 1. Public context
 
-### 1.1 Erdős #278
+Erdős #278 asks for the maximum density covered by a finite family of prescribed congruence moduli. The minimum-density side is known by the aligned-residue inclusion-exclusion construction; the maximum side is open.
 
-Problem #278 asks:
+Erdős #202 and #1190 concern disjoint congruence classes and reciprocal mass of disjoint systems. The packability side of this project remains directly relevant to those problems.
 
-> Let \(A=\{n_1<\cdots<n_r\}\) be a finite set of positive integers. What is the maximum density of integers covered by a suitable choice of congruences \(a_i \pmod{n_i}\)?
-
-It also asks whether the minimum density is achieved when all residues are aligned. The public problem page records that the minimum side is settled by the inclusion–exclusion lower bound, so the live side is the **maximum** covered density. [P278]
-
-### 1.2 Erdős #202
-
-Problem #202 asks how large a pairwise-disjoint congruence system with distinct moduli \(n_i\le N\) can be. [P202]
-
-### 1.3 Erdős #1190
-
-Problem #1190 asks for the maximum of \(\sum 1/n_i\) over finite disjoint congruence systems with all \(n_i>m\). [P1190]
-
-### 1.4 Strategic interpretation
-
-The project remains best understood as a finite structural theory for exact local disjointness and weighted near-disjointness in squarefree families. That theory is directly relevant to the disjointness phenomena underlying #202 and #1190, while still organized around the actual maximum-density problem in #278.
+Cambie's 2025 note gives external support for the strategic view that #278 should not be expected to have a single clean universal formula. The right target remains exact structural families and finite mechanisms.
 
 ---
 
-## 2. Core framework carried from v8
+## 2. Stable core framework
 
-### 2.1 Squarefree product-space model
+### 2.1 Squarefree cylinder model
 
-Let
+For squarefree
 \[
-Q=\prod_{i=1}^d p_i
+Q=\prod_i p_i,
 \]
-be squarefree. Work in the product space
+work in
 \[
-X=\prod_{i=1}^d \Omega_i,
+X=\prod_i\Omega_i.
 \]
-where initially \(|\Omega_i|=p_i\), and after singleton reduction a coordinate may shrink to \(p_i-1\).
-
 A squarefree modulus
 \[
-n_S=\prod_{i\in S} p_i
+n_S=\prod_{i\in S}p_i
 \]
-corresponds to an \(S\)-cylinder
+becomes an \(S\)-cylinder
 \[
-C_S(a)=\{x\in X:x_i=a_i \text{ for all } i\in S\},
+C_S(a)=\{x:x_i=a_i\text{ for all }i\in S\}
 \]
 with density
 \[
-\mu(C_S)=\prod_{i\in S}\frac1{p_i}=\frac1{n_S}.
+\mu(C_S)=1/n_S.
 \]
 
 ### 2.2 Singleton residual-box reduction
 
-If singleton supports \(\{i\}\) are present for \(i\in T\), choose those cylinders first. Then everything outside the residual box
+Singleton supports reduce maximum coverage to a residual box with coordinate sizes
 \[
-R_T=\{x_i\neq 0 \text{ for all } i\in T\}
+d_i=p_i-1\quad\text{or}\quad p_i.
 \]
-is already covered, and the residual coordinate sizes become
+This remains a valid maximum-coverage tool, not a perfect-packing theorem by itself.
+
+### 2.3 Perfect packing
+
+A support family is perfectly packable iff it admits intersection-separating local patterns:
 \[
-d_i=
-\begin{cases}
-p_i-1,& i\in T,\\
-p_i,& i\notin T.
-\end{cases}
+a_S|_{S\cap T}\ne a_T|_{S\cap T}
 \]
+for all distinct supports \(S,T\). If a whole family is perfectly packable, then it gives an exact #278 maximum for that family because the union bound is attained.
 
-For maximum coverage, higher-rank cylinders may then be chosen inside \(R_T\).
+### 2.4 Common-core graph links
 
-### 2.3 Perfect packing and common-core graph links
-
-A support family \(\mathcal H\) is perfectly packable iff one can assign patterns that are pairwise intersection-separating on overlaps.
-
-If every support contains a fixed core \(C\), write
+For
 \[
-\mathcal H=C*\mathcal L=\{C\cup L:L\in\mathcal L\}.
+\mathcal H=C*\mathcal L,
 \]
-Let
+with petal supports disjoint from the core, let
 \[
-D_C=\prod_{i\in C} d_i
+D_C=\prod_{i\in C}d_i.
 \]
-be the number of available core patterns.
-
-When \(\mathcal L\) is a graph \(G\), the main invariant is
+Then
 \[
-\chi_d(G),
+C*\mathcal L\text{ perfectly packable}\iff \chi_{\mathrm{pack}}(\mathcal L)\le D_C.
 \]
-the minimum number of colors needed to partition \(E(G)\) into packable pair-support classes. Then
-\[
-C*G \text{ is perfectly packable } \iff \chi_d(G)\le D_C.
-\]
-
-This remains the project’s main operational reduction.
+When \(\mathcal L\) is a graph \(G\), this becomes the graph-link invariant \(\chi_d(G)\).
 
 ---
 
-## 3. Consolidated exact results already in hand
+## 3. Stable packability results
 
-This section collects the pieces that were already consolidated by v8 and still stand.
+The following remain in the stable bucket:
 
-### 3.1 Packability side
-
-- pair-support theorem;
+- pair-support theorem: pair supports are packable iff matching number \(\le1\) and local degrees fit capacities;
 - common-core theorem;
-- exact \(\chi_d\) formulas for stars;
-- exact \(\chi_d\) formulas for complete bipartite links;
-- exact \(\chi_2(K_n)\);
-- exact \(\chi_d(K_n)=\max(\lceil \binom n2/d\rceil,n-2)\) for all \(d\ge 3\);
-- exact nonuniform clique-link \(n-2\) criterion via the Landau-type prefix inequalities;
-- arithmetic clique-link theorem:
-  \[
-  \chi_{(d_i)}(K_n)=n-2
-  \]
-  for actual prime-based residual capacities after the capacity-1 collapse issue is removed, hence perfect packability iff
-  \[
-  D_C\ge n-2.
-  \]
-
-### 3.2 Weighted side through v8
-
-- clique-link threshold theorem for \(0\le t\le n-4\);
-- clique-link near-threshold theorem at \(t=n-3\), with the exact “omit a light triangle vs. omit a light 3-edge star” dichotomy;
-- the full-clique regime for \(t\ge n-2\);
-- triangle-free full-capacity reduction to weighted \(t\)-vertex edge coverage;
-- exact weighted full-capacity \(K_{a,b}\);
-- exact weighted one-sided-full \(K_{a,b}\);
-- exact weighted arbitrary bipartite one-full-side theorem.
-
-These remain the baseline from which the new v9 step-back proceeds.
+- star formula \(\chi_d(K_{1,r})=\lceil r/d\rceil\);
+- complete bipartite packability formula, with Lean currently covering the small-side regime;
+- uniform clique-link theorem for \(d\ge3\), as a project-level theorem not yet Lean-formalized;
+- binary clique-link formula, likewise project-level;
+- star-triangle normal form for arbitrary graph-link \(\chi_d(F)\).
 
 ---
 
-## 4. New conceptual consolidation after v8
+## 4. Corrected clique-link nonuniform theorem
 
-The main post-v8 progress is conceptual before it is classificatory.
+The v9 theorem deleted two vertices and used capacities \(c_i-2\). This is false: for example, it would incorrectly imply \(\chi_3(K_5)=3\), contradicting the volume lower bound \(\lceil10/3\rceil=4\).
 
-### 4.1 Star–triangle normal form
+The corrected construction is:
 
-For a simple graph \(F\), every intersecting family of edges is either:
+- choose a triangle \(x,y,z\) with capacities at least \(2\);
+- every other vertex is a star center;
+- a star center \(v\) must cover the three edges from \(v\) to the triangle, plus assigned edges to other star centers.
 
-1. a star; or
-2. a triangle.
-
-Therefore the minimum star/triangle cost of \(F\) is
+So the tournament capacity is
 \[
-\boxed{
+outdeg(v)\le d_v-3.
+\]
+After sorting the star-center capacities as
+\[
+b_1\le\cdots\le b_{n-3},
+\]
+the relevant prefix condition is
+\[
+\sum_{i=1}^k(b_i-3)\ge\binom{k}{2}
+\qquad(1\le k\le n-3).
+\]
+
+The arithmetic clique-link theorem is probably salvageable, but its proof must delete three small capacities rather than two and should include small-case checks.
+
+---
+
+## 5. Weighted / algorithmic results after correction
+
+The star-triangle normal form remains correct:
+\[
 \chi_d(F)=
-\min_{\mathcal T,\ \vec H}
+\min_{\mathcal T,\vec H}
 \left(
-|\mathcal T|+\sum_{v\in V(F)}\left\lceil\frac{m_v}{d_v}\right\rceil
+|\mathcal T|+
+\sum_v\left\lceil\frac{m_v}{d_v}\right\rceil
 \right),
-}
 \]
-where
+where \(\mathcal T\) is a set of edge-disjoint admissible triangles and \(\vec H\) orients the remaining edges.
 
-- \(\mathcal T\) ranges over sets of edge-disjoint triangles of \(F\);
-- \(H:=F\setminus \bigcup_{T\in\mathcal T}E(T)\);
-- \(\vec H\) ranges over orientations of \(H\);
-- \(m_v\) is the indegree of \(v\) in \(\vec H\).
-
-#### Why this is exact
-
-- Any decomposition of \(E(F)\) into intersecting families splits uniquely into triangle colors and star colors.
-- Remove the triangle colors. In the remaining graph, every chosen edge belongs to a star and can be oriented toward its star center.
-- If \(m_v\) nontriangle edges are oriented into \(v\), they can be packetized into exactly \(\lceil m_v/d_v\rceil\) star colors at \(v\).
-- Conversely, any orientation of \(H\) gives such a packetization.
-
-So the weighted optimization problem becomes:
-
-> maximize the total selected edge weight subject to a budget bound on  
-> \(|\mathcal T|+\sum_v \lceil m_v/d_v\rceil\).
-
-This is the right global formulation of the current weighted frontier.
-
-### 4.2 Separator/interface gluing principle
-
-Let \(X\subseteq V(G)\) be a separator. After fixing the internal pattern on \(G[X]\), each component \(C\) of \(G-X\) interacts with the rest of the graph only through a finite **signature** on \(X\), consisting of:
-
-- residue increments at vertices of \(X\) coming from nontriangle edges oriented into \(X\), naturally taken modulo \(d_x\);
-- local budget used inside \(C\);
-- local weight gained inside \(C\);
-- and which edges of \(G[X]\) are consumed by mixed triangles that pass through \(C\).
-
-Different components of \(G-X\) then combine by ordinary knapsack-style convolution on these signatures.
-
-This is the real meta-explanation behind the newer exact weighted results. The earlier tree / cactus / one-full-side bipartite successes were not isolated tricks; they were manifestations of this separator-signature principle.
-
----
-
-## 5. New exact algorithmic families that now look consolidated
-
-The following feel solid enough to promote into the main frontier.
-
-### 5.1 Tree links
-
-If \(T\) is a tree with positive edge weights and capacities \(d_v\), then the weighted optimization problem
+But the objective it controls is the packable-subgraph objective
 \[
-M_t(T):=\max\Big\{\sum_{e\in F} w_e : F\subseteq E(T),\ \chi_d(F)\le t\Big\}
+P_t(G)=\max\{w(F):F\subseteq E(G),\chi_d(F)\le t\},
 \]
-is exactly computable by dynamic programming.
+not the full #278 maximum coverage objective.
 
-Because a tree is triangle-free, the star–triangle normal form reduces to an orientation-cost problem:
+Stable algorithmic consequences for \(P_t\):
+
+1. fixed-budget exact XP algorithm by enumerating triangle colors and packet counts, then solving a max-flow / capacitated incidence assignment;
+2. fixed-treewidth DP schema for \(P_t\);
+3. tree and triangle-free special cases as simplified orientation-cost problems.
+
+These are useful for disjoint constructions and lower bounds, but should not be called exact #278 maximum theorems.
+
+---
+
+## 6. Main demotion: packable-subgraph does not equal full union maximum
+
+A one-layer \(K_4\) shows the problem.
+
+With uniform coordinate size \(p\), the packable one-layer optimum has value
 \[
-\chi_d(F)=\min_{\vec F}\sum_v \left\lceil\frac{m_v}{d_v}\right\rceil.
+3p^{-2},
 \]
-A rooted-tree DP needs only to communicate upward:
+because one intersecting edge family in \(K_4\) has at most three edges.
 
-- budget used in the processed subtree;
-- the residue / count information at the root relevant to future carries;
-- and the state of the parent edge (absent / oriented to parent / oriented to root).
-
-This gives exact solvability for weighted tree links.
-
-### 5.2 Bounded-treewidth graph links
-
-For fixed treewidth \(k\), the weighted problem is exactly computable by dynamic programming on a nice tree decomposition.
-
-The bag state tracks:
-
-- budget spent so far;
-- for each bag vertex \(v\), the current residue of incoming nontriangle edges modulo \(d_v\);
-- finite local interface data for selected/oriented bag edges;
-- and finite triangle-interface information recording which triangle pieces are still “open” inside the bag.
-
-When partial solutions are merged, the only nontrivial arithmetic at a vertex is the packet carry
+But assigning distinct local labels to the incident edges at each vertex lets all adjacent edge-cylinders be disjoint. The six edge cylinders then have union measure
 \[
-\left\lfloor \frac{r_v+r_v'}{d_v}\right\rfloor,
+6p^{-2}-3p^{-4},
 \]
-and when a vertex is forgotten, one closes out the final remainder.
+which is strictly larger than \(3p^{-2}\). Thus overlapping but non-packable supports can still improve #278 maximum coverage.
 
-This subsumes trees and cacti and gives exact weighted solvability for fixed-treewidth classes such as:
-
-- trees;
-- cacti;
-- series-parallel graphs;
-- outerplanar graphs;
-- more generally any fixed-treewidth graph-link family.
-
-### 5.3 Triangle-free graphs with full capacity as a special orientation-only regime
-
-The earlier full-capacity triangle-free theorem from v8 now fits naturally as the degenerate case of the star–triangle normal form in which:
-
-- there are no triangles at all, and
-- every selected star can simply be taken whole.
-
-So the weighted problem collapses to weighted edge coverage by up to \(t\) chosen vertices. This is now best viewed as the simplest member of the new orientation/interface framework.
+This invalidates the old phrasing that weighted clique/bipartite graph-link optimization gave exact #278 maxima in those non-perfect regimes.
 
 ---
 
-## 6. Promising parameterized extensions not yet fully consolidated
+## 7. New true maximum-coverage frontier
 
-The recent combos suggested several broader exact families, but after the later recalibration pass they should not yet be promoted to the same status as the items in Section 5.
+Define \(U_d(H)\) to be the true one-layer union optimum for a graph \(H\): choose one pair-cylinder for every edge of \(H\), maximizing union measure.
 
-### 6.1 Bounded feedback-vertex-set
+For common-core graph links with budget \(t=D_C\), the full union problem becomes a layer partition problem:
+\[
+E(G)=E_1\sqcup\cdots\sqcup E_t,
+\]
+with contribution
+\[
+\sum_r U_d(G[E_r])
+\]
+up to the core-density factor.
 
-It looks plausible that a feedback-vertex-set modulator \(Z\) can be handled exactly by:
+The key one-layer combinatorics is local consistency: an intersection of edge-cylinders is nonempty iff all selected edge labels are locally consistent at every vertex.
 
-- solving each forest component of \(G-Z\) by a component table indexed by its interface to \(Z\);
-- then convolving those tables over \(Z\).
+In the full-capacity regime \(d_v\ge\deg_H(v)\), assigning distinct labels to incident edges gives the lower bound
+\[
+U_d(H)\ge
+\sum_{\emptyset\ne M\text{ matching in }H}
+(-1)^{|M|+1}
+\prod_{v\in V(M)}\frac1{d_v}.
+\]
 
-This is very likely true, but the full writeup and pressure-test are not yet complete.
+The best next theorem target is:
 
-### 6.2 Bounded vertex cover
-
-A bounded vertex cover \(C\) should allow exact DP over the independent outside vertices, each contributing a local signature against the small core \(C\). Again: plausible and promising, but not yet fully written.
-
-### 6.3 Bounded twin-cover
-
-This is the densest-looking promising extension. If \(X\) is a twin-cover, then \(G-X\) is a disjoint union of cliques with uniform neighborhoods into \(X\), which strongly suggests a clique-module signature DP over the core \(X\). This looks like the most interesting “dense parameterized” next theorem target, but it still belongs in the provisional bucket for now.
-
----
-
-## 7. What should now be demoted
-
-The stricter step-back after the recalibration combo suggests demoting the following from “current theorem target” status.
-
-### 7.1 Fully bounded two-sided \(K_{a,b}\) closed forms
-
-This is still a live and important target, but the naive Ferrers / northwest-prefix picture is false, and no replacement closed form is yet trustworthy.
-
-### 7.2 Dense modular-structure dreams
-
-Clean exact theorems for neighborhood diversity, modular width, or unrestricted substitution-type dense classes have **not** survived pressure-testing yet. They may still be reachable later, but they are not the right thing to advertise as the immediate frontier.
-
-### 7.3 Over-reading quick combo outputs
-
-Some recent ambitious combos produced plausible exact families quickly. After the explicit project-file correction on combo depth, the right move is to keep those items that fit a clear separator/interface proof scheme and demote the rest until the proof skeleton is fully stabilized.
+> Prove or refute that this proper-local-label construction is optimal for \(U_d(H)\) in the full-capacity one-layer regime.
 
 ---
 
-## 8. Consequences for the three Erdős problems
+## 8. Paper-worthiness after correction
 
-### 8.1 Consequences for #278
+Paper-worthiness remains. The paper is no longer accurately described as "exact weighted #278 maximum formulas beyond packing." It should instead be:
 
-The project now provides exact maximum formulas or exact algorithms for several broad squarefree families:
+> **Squarefree congruence packing via common-core graph links, plus packable-subgraph optimization and the layer-union bridge to full #278 maximum coverage.**
 
-1. the earlier low-dimensional catalogues;
-2. all perfectly packable common-core graph links via \(\chi_d(G)\);
-3. arithmetic clique links, with exact perfect-packing threshold \(D_C\ge n-2\);
-4. weighted arithmetic clique-link maxima in all currently solved clique regimes;
-5. exact weighted one-full-side bipartite families;
-6. exact weighted fixed-treewidth graph-link families.
-
-This is still not a full solution of #278. But it is now much more than a clique-link story: the project has an explicit algorithmic route for exact weighted optimization on broad sparse graph-link classes.
-
-### 8.2 Consequences for #202 and #1190
-
-The disjointness side still inherits the earlier exact packability library. The weighted side now also has a meaningful exact restricted-model optimization theory. This does not solve the global asymptotic questions in #202 or #1190, but it does deepen the finite structural connection to them.
+This is still one paper, not a new separate project, but it requires reorganization.
 
 ---
 
-## 9. Step-back assessment
+## 9. Current recommended paper outline
 
-### 9.1 Paper-worthiness and paper scale
-
-Paper-worthiness had already been crossed by v7 and remained crossed in v8. The gap from v8 to v9 is still **more material for the current paper**, not “time for a different paper.”
-
-What changes is the organization of the current paper. The paper should no longer stop at:
-
-- packability theory,
-- arithmetic clique links,
-- and a few weighted explicit formulas.
-
-It now wants an additional section centered on:
-
-> **exact weighted solvability via star–triangle decompositions and separator signatures**.
-
-### 9.2 What is now the clearest center of gravity?
-
-The project’s real center is now:
-
-> **common-core squarefree graph links, with exact weighted optimization obtained either by explicit formula or by finite-state dynamic programming forced by local star–triangle structure.**
-
-That is a cleaner and more robust description than the v8 phrasing.
-
-### 9.3 Calibration update
-
-The long run of very ambitious combos initially suggested “keep pushing higher.”  
-The later stricter recalibration combo suggested the opposite correction:
-
-- very high targets are **not** generally yielding at the same rate anymore;
-- the best next move is probably a normal combo, or a paper/proof-writing pass, rather than another aggressive overshoot.
-
-So the local calibration has now come back down.
+1. Public context and why no universal formula should be expected.
+2. Squarefree product-space cylinder model.
+3. Perfect packing and intersection-separating patterns.
+4. Pair supports and common-core theorem.
+5. Graph-link invariant \(\chi_d(G)\).
+6. Stable packability families: stars, complete bipartite links, clique links.
+7. Corrected nonuniform clique-link criterion and arithmetic clique-link corollary.
+8. Star-triangle normal form for \(\chi_d(F)\).
+9. Packable-subgraph optimization \(P_t(G)\): fixed-budget and fixed-treewidth exact algorithms.
+10. Why \(P_t\) is not full #278 maximum: the \(K_4\) one-layer example.
+11. True layer-union objective \(U_d(H)\) and matching-polynomial lower bound.
+12. Lean formalization status and roadmap.
 
 ---
 
 ## 10. Current best next targets
 
-### 10.1 Best theorem-writing target
-
-Write up and stabilize the proof of the **star–triangle normal form** and the **bounded-treewidth exact DP theorem**. These now look like the most reusable post-v8 advances.
-
-### 10.2 Best live theorem target
-
-Return to the still-open and very concrete family:
-
-> **weighted complete bipartite links with bounded capacities on both sides**
-
-but do so in a normal-depth combo, not a heavily overshooting one.
-
-### 10.3 Best dense-side exploratory target
-
-If one wants a denser parameterized target after that, the best candidate is:
-
-> **bounded twin-cover exact solvability**
-
-since it has a clear small-core / clique-module interface flavor and seems more plausible than unrestricted modular-width ambitions.
+1. Patch the paper and repo to remove overclaims.
+2. Stabilize the corrected nonuniform clique-link proof.
+3. Develop the one-layer union objective \(U_d(H)\).
+4. Formalize the stable packing spine and star-triangle normal form.
+5. Only after that, return to bounded-capacity weighted \(K_{a,b}\), now clearly as packable-subgraph optimization unless a layer-union theorem is proved.
 
 ---
 
-## 11. Recommended next action
+## References
 
-Two tracks make sense.
-
-### 11.1 Paper track
-
-Start turning the current frontier into a paper-oriented writeup with the following arc:
-
-1. public problem context;
-2. squarefree product-space model and singleton reduction;
-3. perfect packing, pair-support theorem, common-core theorem;
-4. exact \(\chi_d\) families;
-5. arithmetic clique-link theorem;
-6. weighted clique-link theorems;
-7. weighted one-full-side bipartite theorems;
-8. star–triangle normal form;
-9. exact weighted solvability by separator signatures (including fixed-treewidth);
-10. bounded-bipartite and dense-parameterized open frontier.
-
-### 11.2 Live theorem track
-
-If the objective is another theorem push before formalization, the best next combo should probably be **normal** and aimed at bounded-capacity weighted \(K_{a,b}\), with the separator/interface toolkit in mind but without forcing an over-ambitious target on every hit.
-
----
-
-## References / citations
-
-- **[P278]** T. F. Bloom, *Erdős Problem #278*, current public problem page, accessed 2026-04-18.
-- **[P202]** T. F. Bloom, *Erdős Problem #202*, current public problem page, accessed 2026-04-18.
-- **[P1190]** T. F. Bloom, *Erdős Problem #1190*, current public problem page, accessed 2026-04-18.
-- **[FN-v8]** `erdos278_frontier_note_v8_apr2026.md`.
-- **[TC]** `Some-Terminology-and-Conventions.txt`.
-- **[TC-A1]** `Some-Terminology-and-Conventions-Addendum.txt`.
-- **[TC-A2]** `Some-Terminology-and-Conventions-Addendum2.txt`.
-- **[TC-A3]** `STaC-Addendum3.txt`.
+- T. F. Bloom, Erdős Problem #278, https://www.erdosproblems.com/278, accessed 2026-04-25.
+- T. F. Bloom, Erdős Problem #202, https://www.erdosproblems.com/202, accessed 2026-04-25.
+- T. F. Bloom, Erdős Problem #1190, https://www.erdosproblems.com/1190, accessed 2026-04-25.
+- S. Cambie, *Proving it is impossible; on Erdős problem #278*, arXiv:2508.18270, 2025.
+- H. G. Landau, *On dominance relations and the structure of animal societies: III. The condition for a score structure*, Bull. Math. Biophys. 15 (1953), 143-148.

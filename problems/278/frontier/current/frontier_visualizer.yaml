@@ -1,61 +1,81 @@
-frontier_version: v9
-paper_snapshot: v9-formalization
-date: 2026-04-23
+frontier_version: v10_corrected
+date: 2026-04-25
 
 ultimate_problem:
-  name: Erdős #278
-  goal: maximum density of congruence covers
+  name: "Erdős #278"
+  goal: "maximum density of congruence covers"
+  public_status: "open"
 
-operational_goal:
-  current_form: exact packability and weighted optimization on structured squarefree families
+status_summary: >
+  Project remains paper-worthy, but v9 overclaimed the weighted material.
+  Stable core is squarefree congruence packing via common-core graph links.
+  Weighted graph-link results should be treated as packable-subgraph optimization
+  or lower-bound machinery unless a layer-union upper bound is proved.
 
-central_abstractions:
+major_corrections:
+  - name: "Packable-subgraph vs full #278 maximum"
+    old_claim: "Weighted graph-link optima give exact #278 maxima in broad non-perfect regimes."
+    corrected_status: "They optimize packable subgraphs / disjoint constructions; full union can be larger."
+    witness: "One-layer K4 has packable value 3 p^-2 but proper-label union value 6 p^-2 - 3 p^-4."
+  - name: "Nonuniform clique-link n-2 criterion"
+    old_claim: "Delete two vertices; use c_i - 2 prefix inequalities."
+    corrected_status: "Use one triangle plus n-3 stars; delete three triangle vertices; use b_i - 3 prefix inequalities."
+  - name: "Arbitrary-weight clique threshold theorem"
+    old_claim: "Threshold graph on heaviest vertices is always weighted-optimal."
+    corrected_status: "False for arbitrary weights; demote/delete unless special hypotheses are proved."
+
+stable_abstractions:
   - squarefree product-space cylinder model
-  - singleton reduction
+  - singleton residual-box reduction
   - perfect packing
+  - intersection-separating coloring
   - common-core theorem
   - graph-link invariant chi_d(G)
-  - weighted common-core graph links
-  - star-triangle normal form
-  - separator/interface dynamic programming
+  - star-triangle normal form for chi_d(F)
 
-proved_or_consolidated_families:
-  - pair supports
-  - common-core graph links
-  - stars
-  - complete bipartite links
-  - clique-link packability regimes recorded in the paper
-  - weighted clique-link regimes recorded in the paper
-  - triangle-free full-capacity reduction
-  - full-capacity complete bipartite links
-  - one-sided-full complete bipartite links
-  - arbitrary bipartite one-full-side links
-  - weighted tree links via exact dynamic programming
-  - fixed-treewidth graph-link families via exact dynamic programming
+stable_packability_results:
+  - pair-support theorem
+  - star formula chi_d(K_1,r)=ceil(r/d)
+  - complete bipartite packability formula, Lean currently small-side only
+  - uniform clique-link theorem as project-level result, not yet Lean-formalized
+  - corrected arithmetic clique-link threshold, pending corrected proof writeup
 
-formalization_status:
-  current_scope:
-    - product-space core definitions
-    - cylinder disjointness / perfect packing equivalence
+packable_subgraph_algorithms:
+  - fixed-budget XP algorithm for P_t(G) by triangle enumeration + max-flow
+  - fixed-treewidth DP schema for P_t(G)
+  - tree / triangle-free orientation-cost special cases
+
+true_maximum_frontier:
+  object: "U_d(H), the one-layer graph-link union optimum"
+  description: >
+    Choose one pair-cylinder for every edge of H and maximize actual union measure.
+    Intersections are governed by local consistency of endpoint labels.
+  first_target: >
+    Prove/refute that full-capacity proper local labeling is optimal, yielding the matching-polynomial expression.
+
+lean_status:
+  stable_formalized:
+    - product-space cylinder model
+    - perfect packing / intersection separation
     - pair-support theorem
-    - common-core theorem and finite-color reformulation
-    - graph-link abstractions and chi-pack framework
-    - graph-link stars
-    - complete bipartite graph-link definitions and star reductions
-    - exact small-side complete bipartite theorem
-  next_targets:
-    - remaining complete-bipartite regime a >= d
-    - clique-link packability theorems
-    - weighted clique theorems
-    - triangle-free and one-full-side weighted theorems
+    - common-core theorem with disjoint-petal hypothesis
+    - graph-link definitions and chi predicates
+    - stars and complete bipartite small-side theorem
+  avoid_formalizing_as_stated:
+    - old nonuniform clique criterion with c_i - 2
+    - arbitrary-weight clique threshold theorem as #278 maximum
+    - weighted graph-link results as exact full #278 maximum theorems
 
-killed_or_demoted:
-  - universal closed formula for all of #278
-  - sunflower-capacity characterization
-  - naive Ferrers / straight-bar picture for fully bounded bipartite optimization
-  - pure-volume-only clique formulas
-  - over-reading dense parameterized dreams before proof stabilization
+repo_action:
+  replace_current_paper: true
+  replace_current_frontier_note: true
+  archive_v9: true
+  add_correction_notice: true
+  update_status_yaml: true
+  update_visualizer_yaml: true
 
 best_next_targets:
-  - weighted complete bipartite links with bounded capacities on both sides
-  - sharper separator-driven exact algorithms beyond fixed treewidth
+  - "Patch paper/repo to v10 corrected status."
+  - "Write full corrected nonuniform clique-link proof."
+  - "Develop U_d(H) layer-union theory."
+  - "Formalize star-triangle normal form for chi_d(F)."

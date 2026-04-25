@@ -1,55 +1,89 @@
 # Problem 278 — Maximum density of congruence covers
 
 ## Public problem
+
 Erdős Problem #278 asks:
 
-> Let \(A=\{n_1<\cdots<n_r\}\) be a finite set of positive integers. What is the maximum density of integers covered by a suitable choice of congruences \(a_i \pmod{n_i}\)?
+> Let \(A=\{n_1<\cdots<n_r\}\) be a finite set of positive integers. What is the maximum density of integers covered by a suitable choice of congruences \(a_i \pmod {n_i}\)? Is the minimum density achieved when all \(a_i\) are equal?
 
-The minimum-density side is publicly known to be settled; the live side is the **maximum** covered density.
+Public page:
 
-## Current project status
+- https://www.erdosproblems.com/278
 
-- **Status:** paper-worthy partial progress; not a full solution
-- **Current center of gravity:** squarefree common-core graph links
-- **Operational perspective:** exact packability and weighted optimization in structured squarefree families
-- **Current mathematical frontier:** exact weighted solvability via star–triangle structure and separator/interface dynamic programming on broad sparse graph-link classes
-- **Current formalization frontier:** the finite core theory, graph-link layer, stars, and a substantial complete-bipartite packability package, including the exact small-side complete-bipartite theorem
+Related public pages:
 
-## Folder guide
+- https://www.erdosproblems.com/202
+- https://www.erdosproblems.com/1190
 
-- `paper/current/` — canonical current paper draft
-- `paper/archive/` — historically meaningful earlier snapshots
-- `frontier/current/` — canonical current frontier note and visualizer YAML
-- `frontier/README.md` — explains what the frontier note and frontier YAML are, which one is authoritative, and how to update them together
-- `frontier/archive/` — older checkpoints
-- `formalization/` — Lean source tree plus a theorem-to-file map
-- `references/` — public links and lightweight reference material
+## Current status
 
-## What this project currently claims
+This problem folder contains paper-worthy partial progress, but **not** a full solution of Erdős #278.
 
-This project does **not** currently claim a full solution to #278.
+As of the corrected v10 frontier, the stable part of the project is:
 
-What it does claim is a coherent finite structural theory for broad squarefree/common-core families, including:
+- the squarefree product-space cylinder model;
+- perfect packing as intersection-separating colorings;
+- the pair-support theorem;
+- the common-core theorem;
+- the graph-link invariant \(\chi_d(G)\);
+- exact packability results for several graph-link families;
+- a Lean formalization of the stable packing spine and the complete-bipartite small-side theorem.
 
-- exact perfect-packability results through the common-core graph-link invariant
-- exact packability theorems for stars, complete bipartite links, and clique-link regimes already isolated in the paper
-- exact weighted results on several structured families
-- a new exact-solvability program based on star–triangle decomposition and separator/interface dynamic programming
-- a growing Lean formalization of the finite combinatorial core and part of the graph-link packability library
+The main v10 correction is that **packable-subgraph optimization is not the same as the full #278 maximum-coverage objective**. Weighted graph-link optimization results should be read as exact packable-subgraph / disjoint-construction results unless a separate union-measure upper bound is proved.
 
-## Best entry points
+## Corrected v10 framing
 
-1. `frontier/current/frontier_note.md`
-2. `frontier/README.md`
-3. `paper/current/erdos278_paper.pdf`
-4. `formalization/README.md`
-5. `status.yaml`
+The current mathematical center is:
 
-## Update convention for this folder
+> squarefree common-core graph links; exact packability; packable-subgraph optimization; and the layer-union frontier for true #278 maximum coverage.
 
-Treat the files in `current/` as canonical and stable.
-When a new milestone is reached:
-- replace the current artifact
-- archive the older one only if it is worth preserving
-- update `status.yaml`
-- update this README if the high-level description changes
+The key distinction is:
+
+- **Perfect packing** gives exact #278 maxima when the whole support family can be made pairwise disjoint.
+- **Packable-subgraph optimization** gives exact disjoint-construction optima and lower bounds for #278.
+- **Full #278 maximum coverage** requires optimizing actual union measure, including overlapping cylinders.
+
+The true full-coverage frontier is now the one-layer union objective \(U_d(H)\): given a graph link \(H\), choose one pair-cylinder for every edge and maximize the actual union measure.
+
+## Canonical current artifacts
+
+- Current paper draft: `paper/current/erdos278_paper.tex`
+- Current paper PDF: `paper/current/erdos278_paper.pdf`
+- Current frontier note: `frontier/current/frontier_note.md`
+- Current visualizer YAML: `frontier/current/frontier_visualizer.yaml`
+- Correction notice: `corrections/v10_correction_notice.md`
+- Lean formalization: `formalization/lean/`
+
+## Lean formalization status
+
+The Lean development currently formalizes the stable packing material, not the demoted weighted-overclaim material.
+
+Current Lean coverage includes:
+
+- product-space cylinder definitions;
+- cylinder disjointness and perfect packing;
+- the pair-support theorem;
+- the common-core theorem with an explicit core/link disjointness hypothesis;
+- graph-link definitions and color-count predicates;
+- stars and exact star criteria;
+- complete-bipartite setup and structural lemmas;
+- exact complete-bipartite formula in the small-side regime \(a<d\).
+
+See `formalization/README.md` for the module map and roadmap.
+
+## Current best mathematical targets
+
+1. Develop the true layer-union theory \(U_d(H)\).
+2. Prove or refute optimality of proper local labeling in the full-capacity one-layer regime.
+3. Write the corrected nonuniform clique-link criterion carefully.
+4. Finish the remaining complete-bipartite packability formalization.
+5. Formalize the star–triangle normal form for the packable-color invariant \(\chi_d(F)\).
+
+## Correction history
+
+The v10 correction notice records the main change from v9:
+
+- packable-subgraph optimization is not full #278 maximum coverage;
+- the old nonuniform clique-link criterion using `c_i - 2` was wrong;
+- arbitrary-weight clique threshold formulas were demoted;
+- the weighted graph-link material was reframed as packable-subgraph optimization unless a separate union-measure theorem is proved.
