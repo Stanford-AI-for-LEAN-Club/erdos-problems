@@ -1,4 +1,4 @@
-# Stanford AI for Lean Club — Erdős Problems
+# Stanford Lean Club — Erdős Problems
 
 This repository collects research progress made by Stanford Lean Club on selected Erdős problems. 
 
